@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    overflow-x: hidden;
-}
-
 .triangle{
     position: absolute;
     border-left: 11px solid transparent;
@@ -13,6 +9,6 @@ body {
     border-bottom: 11px solid #fdba74;
     border-top: 11px solid transparent;
     display: inline-block;
-    margin-left: 6.2em;
+    margin-left: 4.5em;
     margin-top: -1.2em;
 }

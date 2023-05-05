@@ -27,12 +27,12 @@ export default function App({ Component, pageProps }) {
       }
     }
     catch(err){
-      console.log(err);
+      //console.log(err);
       localStorage.clear();
     }
-    const token = localStorage.getItem('token');
-    if(token){
-      setUser({value : token});
+    const myuser = JSON.parse(localStorage.getItem('myuser'));
+    if(myuser){
+      setUser({value : myuser.token, email : myuser.email});
     }
     else{
       setUser({value : null });
@@ -65,6 +65,7 @@ export default function App({ Component, pageProps }) {
   const buyNow = (itemCode, qty, price, name, size, variant)=>{
     let newCart = {};
     newCart[itemCode] = {qty : 1, price, name, size, variant}
+    setCart({});
     setCart(newCart);
     saveCart(newCart);
     router.push('/checkout')
@@ -89,7 +90,7 @@ export default function App({ Component, pageProps }) {
   }
 
   const logout = ()=>{
-    localStorage.removeItem("token");
+    localStorage.removeItem("myuser");
     setKey(Math.random());
     setUser({value : null });
     router.push('/');
@@ -105,7 +106,7 @@ export default function App({ Component, pageProps }) {
       />
    {key && <Navbar key={key} logout = {logout} user = {user} cart = {cart} addToCart={addtoCart} removeFromCart={remmoveFromCart} clearCart={clearCart} subTotal={subTotal} />}
     
-    <Component buyNow = {buyNow} cart = {cart} addToCart={addtoCart} removeFromCart={remmoveFromCart} clearCart={clearCart} {...pageProps} subTotal={subTotal}  />
+    <Component user={user} buyNow = {buyNow} cart = {cart} addToCart={addtoCart} removeFromCart={remmoveFromCart} clearCart={clearCart} {...pageProps} subTotal={subTotal}  />
     <Footer/>
   </>
   )

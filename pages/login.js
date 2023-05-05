@@ -10,7 +10,7 @@ function Login() {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    if(localStorage.getItem("token")){
+    if(localStorage.getItem("myuser")){
       router.push('/');
     }
   }, [])
@@ -32,7 +32,9 @@ function Login() {
     setName("");
     setPassword("");
     if(response.success){
-      localStorage.setItem('token',response.token);
+      
+      localStorage.setItem('myuser',JSON.stringify({token  : response.token, email: response.email}));
+
       toast.success('Successfully Logged In ! 😎', {
         position: "bottom-center",
         autoClose: 2000,

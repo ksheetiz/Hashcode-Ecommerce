@@ -6,12 +6,12 @@ import mongoose from 'mongoose';
 function Tshirts({products}) {
   
   return (
-    <div className='z-1'>
+    <div className='z-1 min-h-screen'>
       <section className="text-gray-600 body-font">
   <div className="container px-5 py-24 mx-auto">
     <div className="flex flex-wrap -m-4">
       
-      
+      {Object.keys(products).length === 0 && <p className='font-semibold mx-5'>Sorry ! Currently T-Shirts are out of stock right now But Stay Tuned As we will soon bring them back in Stock</p>}
       {Object.keys(products).map((item)=>{
         return(
         <div key={products[item]._id} className="lg:w-1/5 md:w-1/2 p-4 w-full shadow-md m-5">
@@ -69,12 +69,15 @@ export async function getServerSideProps(context){
                 tshirts[item.title].color = [item.color];
                 tshirts[item.title].size = [item.size];
             }
+            else{
+                tshirts[item.title].color = [];
+                tshirts[item.title].size = [];
+              }
+            }
         }
-    }
 
   return {
     props : {products : JSON.parse(JSON.stringify(tshirts))},
   }
 }
- 
 export default Tshirts

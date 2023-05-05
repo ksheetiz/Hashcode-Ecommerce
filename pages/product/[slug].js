@@ -1,21 +1,31 @@
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Product from "@/models/Product";
 import mongoose from 'mongoose';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Error from 'next/error'
 
-function slug({buyNow,addToCart, products, variants }) {
-  console.log(variants)
+function slug({buyNow, addToCart, products, variants, error}) {
   const router = useRouter();
   const {slug} = router.query;
   const [pin, setPin] = useState();
   const [service, setService] = useState();
+  const [color, setColor] = useState("");
+  const [size, setSize] = useState("");
+
+  useEffect(() => {
+    if(!error){
+      setColor(products.color);
+      setSize(products.size);
+      }
+  }, [router.query])
+  
 
   const checkServiceability = async() => {
     let pins = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`);
     let pinJson = await pins.json();
-    if(pinJson.includes(parseInt(pin))){
+    if(Object.keys(pinJson).includes(pin)){
       setService(true);
       toast.success('Your Pincode is Servicable 😎', {
         position: "bottom-center",
@@ -44,12 +54,14 @@ function slug({buyNow,addToCart, products, variants }) {
   }
 
   const refreshVariant = (newcolor, newsize)=>{
-    console.log(newcolor,newsize);
     let url = `${process.env.NEXT_PUBLIC_HOST}/product/${variants[newcolor][newsize]['slug']}`;
-    window.location = url;
+    router.push(url);
   }
-  const [color, setColor] = useState(products.color);
-  const [size, setSize] = useState(products.size);
+
+  if(error == 404){
+    return <Error statusCode={404}/>
+  }
+
   return (
   <div>
     <ToastContainer />
@@ -112,11 +124,11 @@ function slug({buyNow,addToCart, products, variants }) {
             <span className="mr-3">Size</span>
             <div className="relative">
               <select value={size} onChange={(e)=>{refreshVariant(color,e.target.value)}} className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-500 text-base pl-3 pr-10">
-                {Object.keys(variants[color]).includes('s') && <option value={'s'}>SM</option>}
-                {Object.keys(variants[color]).includes('m') && <option value={'m'}>M</option>}
-                {Object.keys(variants[color]).includes('l') && <option value={'l'}>L</option>}
-                {Object.keys(variants[color]).includes('xl') && <option value={'xl'}>XL</option>}
-                {Object.keys(variants[color]).includes('xxl') && <option value={'xxl'}>XXL</option>}
+                {color && Object.keys(variants[color]).includes('s') && <option value={'s'}>SM</option>}
+                {color && Object.keys(variants[color]).includes('m') && <option value={'m'}>M</option>}
+                {color && Object.keys(variants[color]).includes('l') && <option value={'l'}>L</option>}
+                {color && Object.keys(variants[color]).includes('xl') && <option value={'xl'}>XL</option>}
+                {color && Object.keys(variants[color]).includes('xxl') && <option value={'xxl'}>XXL</option>}
               </select>
               <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
                 <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-4 h-4" viewBox="0 0 24 24">
@@ -127,9 +139,10 @@ function slug({buyNow,addToCart, products, variants }) {
           </div>
         </div>
         <div className="flex">
-          <span className="title-font font-medium text-2xl text-gray-900">₹{products.price}</span>
-          <button onClick={()=>{addToCart(slug, 1, products.price, products.title,size,color)}} className="flex ml-8 text-white bg-orange-500 border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-orange-600 rounded">Add to Cart</button>
-          <button onClick={()=>{buyNow(slug, 1, products.price, products.title,size,color)}} className="flex ml-4 text-white bg-orange-500 border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-orange-600 rounded">Buy Now</button>
+         {products.availableQty > 0 && <span className="title-font font-medium text-2xl text-gray-900">₹{products.price}</span>}
+         {products.availableQty <= 0 && <span className="title-font font-medium text-2xl text-gray-900">Out Of stock !</span>}
+          <button disabled={products.availableQty <= 0} onClick={()=>{addToCart(slug, 1, products.price, products.title,size,color)}} className="flex ml-8 text-white disabled:bg-orange-300 bg-orange-500 border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-orange-600 rounded">Add to Cart</button>
+          <button disabled={products.availableQty <= 0} onClick={()=>{buyNow(slug, 1, products.price, products.title,size,color)}} className="flex ml-4 text-white disabled:bg-orange-300 bg-orange-500 border-0 py-2 px-2 md:px-6 focus:outline-none hover:bg-orange-600 rounded">Buy Now</button>
           {/* <button className="rounded-full w-10 h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center hover:bg-orange-600 hover:text-red-800 text-gray-500 ml-4">
             <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-5 h-5" viewBox="0 0 24 24">
               <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"></path>
@@ -140,8 +153,8 @@ function slug({buyNow,addToCart, products, variants }) {
           <input placeholder="Enter Your Pincode" className="px-2 border-2 border-orange-300 rounded-md" value={pin} onChange={(e)=>{setPin(e.target.value)}} type="text" />
           <button className="flex ml-14 text-white bg-orange-500 border-0 py-2 px-6 focus:outline-none hover:bg-orange-600 rounded" onClick={checkServiceability}>Check</button>
         </div>
-        {(service != null && !service) && <div className="text-red-700 text-sm mt-3">Sorry, we will start service in your area soon !</div>}
-        {(service != null && service) && <div className="text-green-700 text-sm mt-3">Yay! You can execpt it to get it Soon</div>}
+        {(service != null && !service) && <div className="text-red-700 font-semibold text-sm mt-3">Sorry, we will start service in your area soon !</div>}
+        {(service != null && service) && <div className="text-green-700 font-semibold text-sm mt-3">Yay! You can execpt it to get it Soon</div>}
       </div>
     </div>
   </div>
@@ -153,8 +166,13 @@ export async function getServerSideProps(context){
   if(!mongoose.connections[0].readyState){
     await mongoose.connect(process.env.MONGO_URI);
   }
-  
+  let error = null;
   let products = await Product.findOne({slug : context.query.slug});
+  if(products == null){
+    return {
+      props : {error : 404},
+    }
+  }
   let variants = await Product.find({title : products.title});
 
   let colorSizeSlug = {};
@@ -169,7 +187,7 @@ export async function getServerSideProps(context){
     }
   }
   return {
-    props : {products : JSON.parse(JSON.stringify(products)), variants : JSON.parse(JSON.stringify(colorSizeSlug))},
+    props : {error : error, products : JSON.parse(JSON.stringify(products)), variants : JSON.parse(JSON.stringify(colorSizeSlug))},
   }
 }
 
