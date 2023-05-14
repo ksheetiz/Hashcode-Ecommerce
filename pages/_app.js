@@ -32,7 +32,7 @@ export default function App({ Component, pageProps }) {
     }
     const myuser = JSON.parse(localStorage.getItem('myuser'));
     if(myuser){
-      setUser({value : myuser.token, email : myuser.email});
+      setUser({value : myuser.token, email : myuser.email, admin : myuser.admin});
     }
     else{
       setUser({value : null });

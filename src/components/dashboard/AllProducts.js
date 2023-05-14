@@ -11,48 +11,9 @@ import {
 } from "@mui/material";
 import BaseCard from "../baseCard/BaseCard";
 
-const products = [
-  {
-    id: "1",
-    name: "Sunil Joshi",
-    post: "Web Designer",
-    pname: "Elite Admin",
-    priority: "Low",
-    pbg: "primary.main",
-    budget: "3.9",
-  },
-  {
-    id: "2",
-    name: "Andrew McDownland",
-    post: "Project Manager",
-    pname: "Real Homes WP Theme",
-    priority: "Medium",
-    pbg: "secondary.main",
-    budget: "24.5",
-  },
-  {
-    id: "3",
-    name: "Christopher Jamil",
-    post: "Project Manager",
-    pname: "MedicalPro WP Theme",
-    priority: "High",
-    pbg: "error.main",
-    budget: "12.8",
-  },
-  {
-    id: "4",
-    name: "Nirav Joshi",
-    post: "Frontend Engineer",
-    pname: "Hosting Press HTML",
-    priority: "Critical",
-    pbg: "success.main",
-    budget: "2.4",
-  },
-];
-
-const ProductPerfomance = () => {
+const AllProducts = ({products}) => {
   return (
-    <BaseCard title="Product Perfomance">
+    <BaseCard title="Products Available">
       <Table
         aria-label="simple table"
         sx={{
@@ -64,27 +25,32 @@ const ProductPerfomance = () => {
           <TableRow>
             <TableCell>
               <Typography color="textSecondary" variant="h6">
-                Id
+                Title
               </Typography>
             </TableCell>
             <TableCell>
               <Typography color="textSecondary" variant="h6">
-                Assigned
+                Slug
               </Typography>
             </TableCell>
             <TableCell>
               <Typography color="textSecondary" variant="h6">
-                Name
+              Image
               </Typography>
             </TableCell>
             <TableCell>
               <Typography color="textSecondary" variant="h6">
-                Priority
+              Quantity
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography color="textSecondary" variant="h6">
+                 Size/Color
               </Typography>
             </TableCell>
             <TableCell align="right">
               <Typography color="textSecondary" variant="h6">
-                Budget
+                Price
               </Typography>
             </TableCell>
           </TableRow>
@@ -99,7 +65,7 @@ const ProductPerfomance = () => {
                     fontWeight: "500",
                   }}
                 >
-                  {product.id}
+                  {product.title.substring(0,31)}
                 </Typography>
               </TableCell>
               <TableCell>
@@ -116,7 +82,7 @@ const ProductPerfomance = () => {
                         fontWeight: "600",
                       }}
                     >
-                      {product.name}
+                      {product.slug.substring(0,20)}
                     </Typography>
                     <Typography
                       color="textSecondary"
@@ -124,14 +90,19 @@ const ProductPerfomance = () => {
                         fontSize: "13px",
                       }}
                     >
-                      {product.post}
+                      {product.img.substring(0,30)}
                     </Typography>
                   </Box>
                 </Box>
               </TableCell>
               <TableCell>
                 <Typography color="textSecondary" variant="h6">
-                  {product.pname}
+                  <img src={product.img} width={35} height={35}/>
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography color="textSecondary" variant="h6">
+                  {product.availableQty}
                 </Typography>
               </TableCell>
               <TableCell>
@@ -139,15 +110,17 @@ const ProductPerfomance = () => {
                   sx={{
                     pl: "4px",
                     pr: "4px",
-                    backgroundColor: product.pbg,
+                    backgroundColor: product.color,
                     color: "#fff",
+                    fontWeight : "bold",
+                    fontSize : "1em"
                   }}
                   size="small"
-                  label={product.priority}
+                  label={product.size}
                 ></Chip>
               </TableCell>
               <TableCell align="right">
-                <Typography variant="h6">${product.budget}k</Typography>
+                <Typography variant="h6">₹{product.price}</Typography>
               </TableCell>
             </TableRow>
           ))}
@@ -157,4 +130,5 @@ const ProductPerfomance = () => {
   );
 };
 
-export default ProductPerfomance;
+export default AllProducts;
+

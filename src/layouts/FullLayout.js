@@ -36,6 +36,16 @@ const FullLayout = ({ children }) => {
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
   return (
     <MainWrapper>
+      <style jsx global>
+        {`
+          footer {
+            display : none;
+          }
+          .navbar {
+            display : none;
+          }
+        `}
+      </style>
       <Header
         sx={{
           paddingLeft: isSidebarOpen && lgUp ? "265px" : "",
@@ -57,7 +67,7 @@ const FullLayout = ({ children }) => {
           }}
         >
           <Box sx={{ minHeight: "calc(100vh - 170px)" }}>{children}</Box>
-          <Footer />
+          <Footer/>
         </Container>
       </PageWrapper>
     </MainWrapper>

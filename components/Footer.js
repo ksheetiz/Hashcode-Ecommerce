@@ -73,7 +73,7 @@ function Footer() {
         <h2 className="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">E-MAIL US</h2>
         <nav className="list-none mb-10">
           <li className='font-semibold'>
-          Flipkart Internet Private Limited,
+          HashCode Internet Private Limited,
           Buildings Alyssa, Begonia &
           Clove Embassy Tech Village,
           Outer Ring Road, Devarabeesanahalli Village,

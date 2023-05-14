@@ -7,7 +7,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const handler = async (req, res) => {
   if (req.method == "POST") {
-    for (let i = 0; i < req.body.length; i++) {
+    try{for (let i = 0; i < req.body.length; i++) {
         let p = new Product({
             title : req.body[i].title,
             slug : req.body[i].slug,
@@ -35,6 +35,9 @@ const handler = async (req, res) => {
           await Stripe_id.save();
     }
     res.status(200).json({success : "success"});
+  }catch(e){
+    res.status(400).json({success : "failure"});
+  }
     
   } else {
     res.status(400).json({ error : "method is not allowed !" });

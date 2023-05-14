@@ -39,15 +39,20 @@ function Navbar({logout,user, cart, addToCart, removeFromCart, clearCart, subTot
     {dropdown && <div onMouseOver={()=>{setDropdown(true)}} onMouseLeave={()=>{setDropdown(false)}} className="profile-menu fixed right-14 mt-4 shadow-lg bg-orange-300 top-14 px-5 rounded-md w-32 z-20">
                 <div className="triangle"></div>
                 <ul>
-                    <Link href={'/myaccount'}><li className='py-1 hover:text-orange-700 cursor-pointer font-semibold text-sm'>My Account</li></Link>
-                    <Link href={'/orders'}><li className='py-1 hover:text-orange-700 cursor-pointer font-semibold text-sm'>Orders</li></Link>
+                    {user.admin ? 
+                    <Link href={`/admin?token=${user.value}`}><li className='py-1 hover:text-orange-700 cursor-pointer font-semibold text-sm'>Dashboard</li></Link> 
+                    : 
+                    <>
+                        <Link href={'/myaccount'}><li className='py-1 hover:text-orange-700 cursor-pointer font-semibold text-sm'>My Account</li></Link>
+                        <Link href={'/orders'}><li className='py-1 hover:text-orange-700 cursor-pointer font-semibold text-sm'>Orders</li></Link>
+                    </>}
                     <li className='py-1 hover:text-orange-700 cursor-pointer font-semibold text-sm' onClick={logout}>Logout</li>
                 </ul>
             </div>}
     </span>}
     <span onMouseOver={() => {setDropdown(true)}} onMouseLeave={()=>{setDropdown(false)}}></span>
 
-    <div className={`flex flex-col py-2 md:flex-row md:justify-start bg-white justify-center items-center shadow-md sticky top-0 z-10 ${!sidebar && 'overflow-hidden'}`}>
+    <div className={`navbar flex flex-col py-2 md:flex-row md:justify-start bg-white justify-center items-center shadow-md sticky top-0 z-10 ${!sidebar && 'overflow-hidden'}`}>
         <div className="logo mr-auto md:mx-5">
             <Link href={'/'}>
                 <Image src="/logo.svg" alt="logo" width={200} height={40}/>
@@ -67,7 +72,7 @@ function Navbar({logout,user, cart, addToCart, removeFromCart, clearCart, subTot
             {user.value && <MdAccountCircle onMouseOver={()=>{setDropdown(true)}} className='text-xl md:text-3xl cursor-pointer mx-4'/>}
             
             {!user.value && <Link href={'/login'}>
-                <button className='bg-orange-400 px-2 py-1 rounded-md text-sm text-white hover:bg-orange-600 mx-2'>Login</button>
+                <button className='bg-orange-400 py-1 px-5 rounded-2xl text-lg font-medium text-white hover:bg-orange-600 mx-2'>Login</button>
             </Link>}
             
             <AiOutlineShoppingCart onClick={toggleCart} className='text-xl md:text-3xl cursor-pointer'/>

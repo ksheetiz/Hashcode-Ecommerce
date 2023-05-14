@@ -33,7 +33,7 @@ function Login() {
     setPassword("");
     if(response.success){
       
-      localStorage.setItem('myuser',JSON.stringify({token  : response.token, email: response.email}));
+      localStorage.setItem('myuser',JSON.stringify({token  : response.token, email: response.email, admin : response.admin}));
 
       toast.success('Successfully Logged In ! 😎', {
         position: "bottom-center",
